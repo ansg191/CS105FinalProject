@@ -24,4 +24,14 @@ df.columns = [
     'hours-per-week', 'native-country', 'income',
 ]
 
+# Convert categorical features
+df['workclass'] = df['workclass'].astype('category')
+df['marital-status'] = df['marital-status'].astype('category')
+df['occupation'] = df['occupation'].astype('category')
+df['relationship'] = df['relationship'].astype('category')
+df['race'] = df['race'].astype('category')
+df['sex'] = df['sex'].astype('category')
+df['native-country'] = df['native-country'].astype('category')
+df['income'] = df['income'].astype('category')
+
 print(df)
