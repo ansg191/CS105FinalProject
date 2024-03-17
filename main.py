@@ -1,3 +1,14 @@
+"""
+CS105 Final Project
+Authors:
+    - Anshul Gupta <agupt109@ucr.edu>
+    - Ali Naqvi <anaqv007@ucr.edu>
+    - Alex Zhang <azhan061@ucr.edu>
+    - Nathan Lee <nlee097@ucr.edu>
+
+This file contains all of the python code for the project.
+"""
+
 import pandas as pd
 # import numpy as np
 # import matplotlib
