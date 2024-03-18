@@ -156,7 +156,98 @@ print("Mean Squared Error:", mse)
 print("R^2 Score:", r2)
 print(confusion_matrix(y_test, y_pred))
 
-#%%
+# %%
+
+features = ['age', 'workclass', 'education-num', 'marital-status', 'occupation',
+            'relationship', 'race', 'sex', 'capital-gain', 'capital-loss', 'hours-per-week',
+            'native-country']
+cats = [False, True, False, True, True, True, True, True, False, False, False, True]
+
+
+def run_knn(X, y, k):
+    """
+    Runs K-Nearest Neighbors regression on X & y and calulates the MSE
+
+    :param X: array-like of shape (n_samples, n_features)
+    :param y: array-like of shape (n_samples)
+    :param k: K parameter for KNN
+    :return: Mean Squared Error
+    """
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    knn_regressor = KNeighborsRegressor(n_neighbors=k)
+    knn_regressor.fit(X_train_scaled, y_train)
+
+    # Predictions
+    y_pred = knn_regressor.predict(X_test_scaled)
+    y_pred = np.round(y_pred, 0)
+    # Evaluation metrics
+    mse = mean_squared_error(y_test, y_pred)
+    # r2 = r2_score(y_test, y_pred)
+
+    return mse
+
+
+X = pd.DataFrame()
+
+feat_set = set()  # Features that have already been selected by the algorithm
+results = []  # Best results for each level of the tree
+for j in range(len(features)):
+    print(j)  # Cause this takes a while
+
+    # Track best MSE feature for this tree level
+    best_mse = float('inf')
+    best_idx = None
+
+    for i in range(len(features)):
+        feat = features[i]
+        is_cat = cats[i]
+
+        # Prevent duplicate features
+        if feat in feat_set:
+            continue
+
+        # print(i, feat)
+
+        # Add feature as column to X
+        X[feat] = df[feat].cat.codes if is_cat else df[feat]
+
+        # Run KNN on X
+        mse = run_knn(X, y, 15)
+        if best_idx is None or mse < best_mse:
+            best_idx = i
+            best_mse = mse
+
+        # Remove feature column from X
+        X.drop(feat, axis=1, inplace=True)
+
+    assert (best_idx is not None)
+
+    # Add feature to X
+    X[features[best_idx]] = df[features[best_idx]].cat.codes if cats[best_idx] else df[
+        features[best_idx]]
+    # Add feature to feature set
+    feat_set.add(features[best_idx])
+
+    # Add result of tree level
+    results.append((list(X.columns), best_mse))
+
+# Find minimum MSE at all tree levels
+min_mse = float('inf')
+min_feat = []
+for result in results:
+    if result[1] < min_mse:
+        min_mse = result[1]
+        min_feat = result[0]
+
+print(min_feat)
+print(min_mse)
+
+# %%
 # Elbow Method for KNN
 
 ks = np.linspace(1, 25, 13, dtype=int)
