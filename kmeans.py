@@ -12,7 +12,7 @@ This file contains all of the python code for the project.
 import pandas as pd
 # import numpy as np
 # import matplotlib
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 
@@ -30,26 +30,33 @@ df.columns = [
 categorical_cols = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country', 'income']
 df_encoded = pd.get_dummies(df, columns=categorical_cols)
 
-print(df_encoded)
-print(df_encoded.dtypes)
+X = df[['age', 'education-num', 'hours-per-week', 'capital-gain', 'capital-loss', 'income']]
+X_encoded = pd.get_dummies(X, columns=['income'])
 
-# Initialize and fit KMeans model
-kmeans = KMeans(n_clusters=3, random_state=42)  # Setting number of clusters to 3, you can change this
-kmeans.fit(df_encoded)
+inertia_values = []
 
-# Get cluster centers
-cluster_centers = kmeans.cluster_centers_
+for k in range(1, 26):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(X_encoded)
+    inertia_values.append(kmeans.inertia_)
 
-# Get cluster labels
-cluster_labels = kmeans.labels_
+# Plot the results
+plt.plot(range(1, 26), inertia_values, marker='o')
+plt.title('Elbow Method For Optimal k')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.show()
 
-# Add cluster labels to original dataframe
-df['cluster_label'] = cluster_labels
+#kmeans = KMeans(n_clusters=3, random_state=42)
+#kmeans.fit(df_encoded)
 
-# Print cluster centers
-print("Cluster Centers:")
-print(cluster_centers)
+#cluster_centers = kmeans.cluster_centers_
+#cluster_labels = kmeans.labels_
 
-# Print counts of samples in each cluster
-print("\nCounts of samples in each cluster:")
-print(df['cluster_label'].value_counts())
+#df['cluster_label'] = cluster_labels
+
+#print("Cluster Centers:")
+#print(cluster_centers)
+
+#print("\nCounts of samples in each cluster:")
+#print(df['cluster_label'].value_counts())
