@@ -158,15 +158,18 @@ for i in range(13):
     errs[i] = (mse, r2)
 
 fig, ax1 = plt.subplots()
-ax1.set_xlabel("K value")
-ax1.set_ylabel("Mean Squared Error")
-ax1.plot(ks, errs[:, 0], 'b-')
-ax1.tick_params(axis='y')
 
+COLOR = 'tab:red'
+ax1.set_xlabel("K value")
+ax1.set_ylabel("Mean Squared Error", color=COLOR)
+ax1.plot(ks, errs[:, 0], color=COLOR)
+ax1.tick_params(axis='y', labelcolor=COLOR)
+
+COLOR = 'tab:blue'
 ax2 = ax1.twinx()
-ax2.set_ylabel("R^2 Score")
-ax2.plot(ks, errs[:, 1], 'r-')
-ax2.tick_params(axis='y')
+ax2.set_ylabel("R^2 Score", color=COLOR)
+ax2.plot(ks, errs[:, 1], color=COLOR)
+ax2.tick_params(axis='y', labelcolor=COLOR)
 
 fig.suptitle('Elbow Method for KNN')
 fig.tight_layout()
