@@ -10,8 +10,9 @@ This file contains all of the python code for the project.
 """
 
 import pandas as pd
-import numpy as np
-import matplotlib
+#import numpy as np
+#import matplotlib
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 df = pd.read_csv('census_income/adult.data')
@@ -37,6 +38,7 @@ plt.legend(title='Income')
 plt.tight_layout()
 
 plt.show()
+
 contingency_table = pd.crosstab(df['relationship'], df['income'])
 
 contingency_table_normalized = contingency_table.div(contingency_table.sum(axis=1), axis=0)
