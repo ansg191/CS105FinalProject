@@ -9,9 +9,15 @@ Authors:
 This file contains all of the python code for the project.
 """
 
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score, confusion_matrix
 
 df = pd.read_csv('census_income/adult.data')
 
@@ -109,3 +115,27 @@ plt.xlabel('Income')
 plt.ylabel('Age')
 
 plt.show()
+
+X = df[['age', 'education-num', 'hours-per-week', 'capital-gain', 'capital-loss']]
+y = df['income'].cat.codes
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+k = 5
+knn_regressor = KNeighborsRegressor(n_neighbors=k)
+knn_regressor.fit(X_train_scaled, y_train)
+
+# Predictions
+y_pred = knn_regressor.predict(X_test_scaled)
+y_pred = np.round(y_pred, 0)
+# Evaluation metrics
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("Mean Squared Error:", mse)
+print("R^2 Score:", r2)
+print(confusion_matrix(y_test, y_pred))
