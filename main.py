@@ -10,8 +10,6 @@ This file contains all of the python code for the project.
 """
 
 import pandas as pd
-# import numpy as np
-# import matplotlib
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -36,6 +34,10 @@ df['native-country'] = df['native-country'].astype('category')
 df['income'] = df['income'].astype('category')
 
 print(df)
+
+# Plots `Hours per week worked` vs `education level` with the color representing their `income`
+df.plot.scatter(x='hours-per-week', y='education-num', c='income', colormap='viridis')
+plt.show()
 
 relationship_income_count = df.groupby(['relationship', 'income'], observed=True).size().unstack(
     fill_value=0)
