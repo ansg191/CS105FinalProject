@@ -10,8 +10,8 @@ This file contains all of the python code for the project.
 """
 
 import pandas as pd
-#import numpy as np
-#import matplotlib
+# import numpy as np
+# import matplotlib
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -37,7 +37,8 @@ df['income'] = df['income'].astype('category')
 
 print(df)
 
-relationship_income_count = df.groupby(['relationship', 'income'], observed=True).size().unstack(fill_value=0)
+relationship_income_count = df.groupby(['relationship', 'income'], observed=True).size().unstack(
+    fill_value=0)
 
 relationship_income_count.plot(kind='bar', figsize=(10, 6))
 plt.title('Relationship Status vs Income')
@@ -61,7 +62,8 @@ plt.ylabel('Relationship Status')
 
 plt.show()
 
-education_income_count = df.groupby(['education', 'income'], observed=True).size().unstack(fill_value=0)
+education_income_count = df.groupby(['education', 'income'], observed=True).size().unstack(
+    fill_value=0)
 
 education_income_count.plot(kind='bar', figsize=(10, 6))
 plt.title('Education vs Income')
@@ -85,7 +87,8 @@ plt.ylabel('Education Level')
 plt.xticks(rotation=45)
 plt.show()
 
-workclass_income_count = df.groupby(['workclass', 'income'], observed=True).size().unstack(fill_value=0)
+workclass_income_count = df.groupby(['workclass', 'income'], observed=True).size().unstack(
+    fill_value=0)
 
 workclass_income_count.plot(kind='bar', figsize=(10, 6))
 plt.title('Work Class vs Income')
