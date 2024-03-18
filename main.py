@@ -41,9 +41,13 @@ df['income'] = df['income'].astype('category')
 
 print(df)
 
+#%%
+
 # Plots `Hours per week worked` vs `education level` with the color representing their `income`
 df.plot.scatter(x='hours-per-week', y='education-num', c='income', colormap='viridis')
 plt.show()
+
+#%%
 
 relationship_income_count = df.groupby(['relationship', 'income'], observed=True).size().unstack(
     fill_value=0)
@@ -58,6 +62,8 @@ plt.tight_layout()
 
 plt.show()
 
+#%%
+
 contingency_table = pd.crosstab(df['relationship'], df['income'])
 
 contingency_table_normalized = contingency_table.div(contingency_table.sum(axis=1), axis=0)
@@ -69,6 +75,8 @@ plt.xlabel('Income')
 plt.ylabel('Relationship Status')
 
 plt.show()
+
+#%%
 
 education_income_count = df.groupby(['education', 'income'], observed=True).size().unstack(
     fill_value=0)
@@ -83,6 +91,8 @@ plt.tight_layout()
 
 plt.show()
 
+#%%
+
 contingency_table = pd.crosstab(df['education'], df['income'])
 
 contingency_table_normalized = contingency_table.div(contingency_table.sum(axis=1), axis=0)
@@ -94,6 +104,8 @@ plt.xlabel('Income')
 plt.ylabel('Education Level')
 plt.xticks(rotation=45)
 plt.show()
+
+#%%
 
 workclass_income_count = df.groupby(['workclass', 'income'], observed=True).size().unstack(
     fill_value=0)
@@ -108,6 +120,8 @@ plt.tight_layout()
 
 plt.show()
 
+#%%
+
 plt.figure(figsize=(8, 6))
 sns.violinplot(x='income', y='age', data=df)
 plt.title('Age Distribution by Income')
@@ -115,6 +129,8 @@ plt.xlabel('Income')
 plt.ylabel('Age')
 
 plt.show()
+
+#%%
 
 X = df[['age', 'education-num', 'hours-per-week', 'capital-gain', 'capital-loss']]
 y = df['income'].cat.codes
@@ -140,6 +156,7 @@ print("Mean Squared Error:", mse)
 print("R^2 Score:", r2)
 print(confusion_matrix(y_test, y_pred))
 
+#%%
 # Elbow Method for KNN
 
 ks = np.linspace(1, 25, 13, dtype=int)
@@ -175,3 +192,5 @@ fig.suptitle('Elbow Method for KNN')
 fig.tight_layout()
 
 plt.show()
+
+#%%
