@@ -139,3 +139,39 @@ r2 = r2_score(y_test, y_pred)
 print("Mean Squared Error:", mse)
 print("R^2 Score:", r2)
 print(confusion_matrix(y_test, y_pred))
+
+# Elbow Method for KNN
+
+ks = np.linspace(1, 25, 13, dtype=int)
+errs = np.zeros((len(ks), 2))
+
+for i in range(13):
+    k = ks[i]
+    knn_regressor = KNeighborsRegressor(n_neighbors=k)
+    knn_regressor.fit(X_train_scaled, y_train)
+
+    # Predictions
+    y_pred = knn_regressor.predict(X_test_scaled)
+    # Evaluation metrics
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    errs[i] = (mse, r2)
+
+fig, ax1 = plt.subplots()
+
+COLOR = 'tab:red'
+ax1.set_xlabel("K value")
+ax1.set_ylabel("Mean Squared Error", color=COLOR)
+ax1.plot(ks, errs[:, 0], color=COLOR)
+ax1.tick_params(axis='y', labelcolor=COLOR)
+
+COLOR = 'tab:blue'
+ax2 = ax1.twinx()
+ax2.set_ylabel("R^2 Score", color=COLOR)
+ax2.plot(ks, errs[:, 1], color=COLOR)
+ax2.tick_params(axis='y', labelcolor=COLOR)
+
+fig.suptitle('Elbow Method for KNN')
+fig.tight_layout()
+
+plt.show()
