@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """
 CS105 Final Project
 Authors:
@@ -138,16 +139,17 @@ features = ['age', 'workclass', 'education-num', 'marital-status', 'occupation',
 cats = [False, True, False, True, True, True, True, True, False, False, False, True]
 
 
-def run_knn(X, y, k):
+def run_knn(x, y, k):
+    # pylint: disable=redefined-outer-name
     """
     Runs K-Nearest Neighbors regression on X & y and calculates the MSE
 
-    :param X: array-like of shape (n_samples, n_features)
+    :param x: array-like of shape (n_samples, n_features)
     :param y: array-like of shape (n_samples)
     :param k: K parameter for KNN
     :return: (Mean Squared Error, R^2)
     """
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
@@ -178,8 +180,7 @@ for j in range(len(features)):
     best_mse = float('inf')
     best_idx = None
 
-    for i in range(len(features)):
-        feat = features[i]
+    for i, feat in enumerate(features):
         is_cat = cats[i]
 
         # Prevent duplicate features
@@ -200,7 +201,7 @@ for j in range(len(features)):
         # Remove feature column from X
         X.drop(feat, axis=1, inplace=True)
 
-    assert (best_idx is not None)
+    assert best_idx is not None
 
     # Add feature to X
     X[features[best_idx]] = df[features[best_idx]].cat.codes if cats[best_idx] else df[
