@@ -6,6 +6,7 @@ Authors:
     - Ali Naqvi <anaqv007@ucr.edu>
     - Alex Zhang <azhan061@ucr.edu>
     - Nathan Lee <nlee097@ucr.edu>
+    - Jerome Guan <jguan048@ucr.edu>
 
 This file contains all of the python code for the project.
 """
@@ -44,6 +45,33 @@ df['income'] = df['income'].astype('category')
 print(df)
 
 # %%
+
+# Plotting a pie chart
+gender_counts = df['sex'].value_counts()
+plt.figure(figsize=(8, 8))
+plt.pie(gender_counts, labels=gender_counts.index, autopct='%1.1f%%', startangle=90,
+        colors=['lightblue', 'lightcoral'])
+plt.title('Distribution of Men and Women in the study')
+plt.show()
+
+relationship_counts = df['relationship'].value_counts()
+plt.figure(figsize=(9, 9))
+plt.pie(relationship_counts, labels=relationship_counts.index, autopct='%1.1f%%', startangle=90)
+plt.title('Distribution of different races in the study')
+plt.show()
+
+occupation_income_count = df.groupby(['occupation', 'income'], observed=True).size().unstack(
+    fill_value=0)
+
+occupation_income_count.plot(kind='bar', figsize=(10, 6))
+plt.title('Occupation vs Income')
+plt.xlabel('Occupation Type')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.legend(title='Income')
+plt.tight_layout()
+
+plt.show()
 
 # Plots `Hours per week worked` vs `education level` with the color representing their `income`
 df.plot.scatter(x='hours-per-week', y='education-num', c='income', colormap='viridis')
@@ -383,7 +411,6 @@ plt.show(block=False)
 # %%
 
 fig, ax = plt.subplots(3, 2)
-
 
 X.plot.scatter(x='education-num', y='capital-gain', c='y_pred', colormap='cool', ax=ax[0][0])
 X.plot.scatter(x='age', y='capital-gain', c='y_pred', colormap='cool', ax=ax[0][1])
