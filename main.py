@@ -15,7 +15,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, confusion_matrix
@@ -323,6 +324,75 @@ ax[1].set_title('Actual')
 
 plt.tight_layout()
 plt.show(block=False)
+
+# %%
+
+X = df[['education-num', 'capital-gain', 'age']].copy(deep=True)
+
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+
+def run_kmeans(k):
+    # pylint: disable=redefined-outer-name
+    """
+    Runs k-means clustering with k clusters
+    :param k: Number of clusters
+    :return: K-means clustering scoring
+    """
+    kmeans = KMeans(n_clusters=k, random_state=42).fit(X_scaled)
+    return kmeans.inertia_
+
+
+# Elbow Method for K-Means
+
+ks = np.linspace(1, 50, 25, dtype=int)
+errs = np.zeros(len(ks))
+
+for i, k in enumerate(ks):
+    errs[i] = run_kmeans(k)
+
+fig, ax = plt.subplots()
+
+ax.set_xlabel("K value")
+ax.set_ylabel("Variance")
+ax.plot(ks, errs)
+ax.tick_params(axis='y')
+
+fig.suptitle('Elbow Method for K-Means')
+fig.tight_layout()
+
+plt.show(block=False)
+
+# %%
+
+kmeans = KMeans(n_clusters=10, random_state=42).fit(X_scaled)
+y_pred = kmeans.predict(X_scaled)
+
+print("Cluster Centers:", kmeans.cluster_centers_)
+print("Variance:", kmeans.inertia_)
+
+X['y_pred'] = pd.Series(y_pred).astype('category')
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+ax.scatter(X['education-num'], X['capital-gain'], X['age'], c=X['y_pred'])
+
+plt.show(block=False)
+
+# %%
+
+fig, ax = plt.subplots(3, 2)
+
+
+X.plot.scatter(x='education-num', y='capital-gain', c='y_pred', colormap='cool', ax=ax[0][0])
+X.plot.scatter(x='age', y='capital-gain', c='y_pred', colormap='cool', ax=ax[0][1])
+X.plot.scatter(x='education-num', y='age', c='y_pred', colormap='cool', ax=ax[1][0])
+X.plot.scatter(x='age', y='age', c='y_pred', colormap='cool', ax=ax[1][1])
+X.plot.scatter(x='education-num', y='education-num', c='y_pred', colormap='cool', ax=ax[2][0])
+X.plot.scatter(x='capital-gain', y='capital-gain', c='y_pred', colormap='cool', ax=ax[2][1])
+
+plt.tight_layout()
 
 # %%
 
