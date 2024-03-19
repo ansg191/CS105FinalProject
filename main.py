@@ -300,15 +300,20 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 y_pred = knn_regressor.predict(X_scaled)
-y_pred = np.around(y_pred, 0)
 
 new_df = df.copy(deep=True)
-new_df['y_pred'] = pd.Series(y_pred).astype('category')
+new_df['y_pred'] = pd.Series(y_pred)
 
 fig, ax = plt.subplots(nrows=1, ncols=2)
 
-new_df.plot.scatter(x='occupation', y='education-num', c='y_pred', colormap='viridis', ax=ax[0])
-df.plot.scatter(x='occupation', y='education-num', c='income', colormap='viridis', ax=ax[1])
+new_df.plot.scatter(x='occupation', y='education-num', c='y_pred', colormap='cool', ax=ax[0])
+
+# Find proportion of `>50K` at each occupation & education-num level
+new_df2 = df.copy(deep=True)
+new_df2['income'] = new_df2['income'].cat.codes
+new_df2 = new_df2.groupby(['occupation', 'education-num'], observed=False)[
+    'income'].mean().reset_index()
+new_df2.plot.scatter(x='occupation', y='education-num', c='income', colormap='cool', ax=ax[1])
 
 ax[0].tick_params(axis='x', rotation=90)
 ax[0].set_title('Predicted')
