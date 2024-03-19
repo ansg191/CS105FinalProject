@@ -166,12 +166,12 @@ cats = [False, True, False, True, True, True, True, True, False, False, False, T
 
 def run_knn(X, y, k):
     """
-    Runs K-Nearest Neighbors regression on X & y and calulates the MSE
+    Runs K-Nearest Neighbors regression on X & y and calculates the MSE
 
     :param X: array-like of shape (n_samples, n_features)
     :param y: array-like of shape (n_samples)
     :param k: K parameter for KNN
-    :return: Mean Squared Error
+    :return: (Mean Squared Error, R^2)
     """
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -184,15 +184,16 @@ def run_knn(X, y, k):
 
     # Predictions
     y_pred = knn_regressor.predict(X_test_scaled)
-    y_pred = np.round(y_pred, 0)
+    # y_pred = np.round(y_pred, 0)
     # Evaluation metrics
     mse = mean_squared_error(y_test, y_pred)
-    # r2 = r2_score(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
 
-    return mse
+    return mse, r2
 
 
 X = pd.DataFrame()
+y = df['income'].cat.codes
 
 feat_set = set()  # Features that have already been selected by the algorithm
 results = []  # Best results for each level of the tree
@@ -217,7 +218,7 @@ for j in range(len(features)):
         X[feat] = df[feat].cat.codes if is_cat else df[feat]
 
         # Run KNN on X
-        mse = run_knn(X, y, 15)
+        mse, _ = run_knn(X, y, 15)
         if best_idx is None or mse < best_mse:
             best_idx = i
             best_mse = mse
@@ -234,18 +235,20 @@ for j in range(len(features)):
     feat_set.add(features[best_idx])
 
     # Add result of tree level
-    results.append((list(X.columns), best_mse))
+    results.append((X.copy(deep=True), best_mse))
 
 # Find minimum MSE at all tree levels
 min_mse = float('inf')
-min_feat = []
+min_feat = pd.DataFrame()
 for result in results:
     if result[1] < min_mse:
         min_mse = result[1]
         min_feat = result[0]
 
-print(min_feat)
+print(min_feat.columns)
 print(min_mse)
+
+X = min_feat
 
 # %%
 # Elbow Method for KNN
