@@ -257,8 +257,6 @@ plt.show()
 
 # %%
 
-X = df[['age', 'education-num', 'hours-per-week', 'capital-gain', 'capital-loss']]
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 scaler = StandardScaler()
@@ -278,6 +276,16 @@ r2 = r2_score(y_test, y_pred)
 
 print("Mean Squared Error:", mse)
 print("R^2 Score:", r2)
-print(confusion_matrix(y_test, y_pred))
+
+# %%
+
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
+print("Accuracy:", np.sum(np.diag(cm)) / np.sum(cm))
+print("Error rate:", np.sum(np.diag(np.fliplr(cm))) / np.sum(cm))
+print("Recall:", cm[1, 1] / np.sum(cm, axis=1)[1])
+print("Precision:", cm[1, 1] / np.sum(cm, axis=0)[1])
+print("False Positive Rate:", cm[0, 1] / np.sum(cm, axis=1)[0])
+print("Prevalence:", cm[1, 1] / np.sum(cm))
 
 # %%
