@@ -46,7 +46,7 @@ print(df)
 
 # Plots `Hours per week worked` vs `education level` with the color representing their `income`
 df.plot.scatter(x='hours-per-week', y='education-num', c='income', colormap='viridis')
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -61,7 +61,7 @@ plt.xticks(rotation=45)
 plt.legend(title='Income')
 plt.tight_layout()
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -75,7 +75,7 @@ plt.title('Proportion of Income Levels by Relationship Status')
 plt.xlabel('Income')
 plt.ylabel('Relationship Status')
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -90,7 +90,7 @@ plt.xticks(rotation=45)
 plt.legend(title='Income')
 plt.tight_layout()
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -104,7 +104,7 @@ plt.title('Proportion of Income Levels by Education')
 plt.xlabel('Income')
 plt.ylabel('Education Level')
 plt.xticks(rotation=45)
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -119,7 +119,7 @@ plt.xticks(rotation=45)
 plt.legend(title='Income')
 plt.tight_layout()
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -129,7 +129,7 @@ plt.title('Age Distribution by Income')
 plt.xlabel('Income')
 plt.ylabel('Age')
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -253,7 +253,7 @@ ax2.tick_params(axis='y', labelcolor=COLOR)
 fig.suptitle('Elbow Method for KNN')
 fig.tight_layout()
 
-plt.show()
+plt.show(block=False)
 
 # %%
 
@@ -269,7 +269,7 @@ knn_regressor.fit(X_train_scaled, y_train)
 
 # Predictions
 y_pred = knn_regressor.predict(X_test_scaled)
-y_pred = np.round(y_pred, 0)
+
 # Evaluation metrics
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
@@ -279,6 +279,7 @@ print("R^2 Score:", r2)
 
 # %%
 
+y_pred = np.round(y_pred, 0)
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
 print("Accuracy:", np.sum(np.diag(cm)) / np.sum(cm))
